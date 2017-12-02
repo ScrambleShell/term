@@ -286,6 +286,10 @@ func (t *Terminal) SetBg(c Color) {
 	t.setColor(c, true)
 }
 
+func (t *Terminal) Reset() {
+	t.Puts(termReset)
+}
+
 type Color int
 
 const (
