@@ -59,9 +59,6 @@ func (t *Terminal) Start() error {
 		return err
 	}
 
-	// t.Puts(termEnterCA)
-	// t.Puts(termEnterAcs)
-
 	t.Width, t.Height, err = windowSize(t.out.Fd())
 	if err != nil {
 		return err
@@ -87,8 +84,6 @@ func (t *Terminal) Stop() {
 	signal.Reset(syscall.SIGWINCH)
 
 	t.Puts(termShowCursor)
-	// t.Puts(termExitAcs)
-	// t.Puts(termExitCA)
 
 	setMode(t.out.Fd(), t.originalMode)
 }
@@ -129,7 +124,7 @@ func (t *Terminal) readEvents() {
 			var err error
 			t.Width, t.Height, err = windowSize(t.out.Fd())
 			if err != nil {
-				// TODO error event
+				// TODO dont panic, send error event
 				t.Stop()
 				panic(err)
 			}
@@ -172,6 +167,8 @@ func (t *Terminal) readEvents() {
 							key = KeyHome
 						case "[F":
 							key = KeyEnd
+						case "[Z":
+							key = KeyShiftTab
 						case "OH":
 							key = KeyHome
 						case "OF":
